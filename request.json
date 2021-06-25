@@ -1,0 +1,16 @@
+{
+  "requests": [
+    {
+      "image": {
+        "source": {
+          "imageUri": "gs://cogvision-storage/details-of-expiry-date-and-manufacturing-date-on-product-label-2E94C88.jpeg"
+        }
+       },
+       "features": [
+         {
+           "type": "TEXT_DETECTION"
+         }
+       ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet'>
+	  <style>
+		.preview {
+			width: 100%;
+			text-align: center;
+			padding: 10px;
+			height: 150px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+		}
+		#response {
+			height: 215px;
+		}
+		#preview {
+			height: 100%;
+		}
+		img[src=""] { content:url("data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="); }
+	  </style>
+   </head>
+   <body>
+      <div class='container pt-4'>
+         <form id="frm" name="frm">
+            <div class="form-group">
+               <select class="form-control form-control-lg" id="usecase">
+                  <option value='0'>select use-case</option>
+                  <option value='http://127.0.0.1:5000/productexpiry'>Product Expiry</option>
+                  <option value='http://127.0.0.1:5000/productharm'>Product Harm</option>
+               </select>
+            </div>
+            <div class="row pt-3">
+               <div class="col">
+                  <div class='preview'>
+                     <img src="#" id="preview" alt="" src="image.png"/>
+                  </div>
+                  <div class="alert alert-primary">
+                     <input accept="image/*" type='file' id="imgInp"  />
+                  </div>
+               </div>
+               <div class="col">
+                  <div class="form-group">
+                     <textarea class="form-control" id="response" placeholder="Response" rows="3"></textarea>
+                  </div>
+               </div>
+            </div>
+			
+			<div class="form-group text-center">
+				<button class="btn btn-primary" onclick="sendRequest()">Submit</button>
+			</div>
+         </form>
+      </div>
+      
+      <script> 
+	    var fileImg = ""
+		imgInp.onchange = event => {
+		  fileImg = document.getElementById('imgInp').value
+		  var reader = new FileReader();
+			 reader.onload = function()
+			 {
+			  var output = document.getElementById('preview');
+			  output.src = reader.result;
+			 }
+			 reader.readAsDataURL(event.target.files[0]);
+		}
+		
+		function sendRequest() {
+			var usecase = document.getElementById('usecase').value
+			
+			
+			if(parseInt(usecase) != 0 && fileImg != "") {
+				var xhttp = new XMLHttpRequest();
+				xhttp.open("POST", usecase, true); 
+				xhttp.setRequestHeader("Content-Type", "application/json");
+				xhttp.onreadystatechange = function() {
+				   if (this.readyState == 4 && this.status == 200) {
+					 var res = JSON.parse(this.responseText);
+					 document.getElementById('response').innerHTML = res;
+				   }
+				};
+				var data = {filepath: fileImg};
+				xhttp.send(JSON.stringify(data));
+			} else {
+				alert("Select use-case and upload image");
+			}
+			event.preventDefault()
+		}
+
+		
+         
+      </script>
+   </body>
+</html>
